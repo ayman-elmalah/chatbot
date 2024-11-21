@@ -63,7 +63,7 @@ Ensure you replace all keys` with your own values.
 Once the dependencies are installed and environment variables are set, you can start the Flask development server.
 
 ```bash
-python3 run.py
+flask run
 ```
 
 Flask will start the application on the port specified in the `.env` file (default is 5000 if not set).

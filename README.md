@@ -6,7 +6,8 @@ This project is a scalable chatbot built using Flask. It provides an interactive
 1. [Project Overview](#project-overview)
 2. [Technologies Used](#technologies-used)
 3. [Installation Guide](#installation-guide)
-4. [Running the Application](#running-the-application)
+4. [Database Migration](#database-migration)
+5. [Running the Application](#running-the-application)
 
 ## Project Overview
 
@@ -56,6 +57,21 @@ cp .env.example .env
 Ensure you replace all keys` with your own values.
 
 ---
+
+## Database Migration
+
+To set up your database schema, you'll need to perform the migration. Follow these steps to migrate your database:
+
+```bash
+flask db migrate
+```
+
+```bash
+flask db upgrade
+```
+
+---
+
 
 ## Running the Application
 

@@ -1,0 +1,28 @@
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv()
+
+class Config:
+    # Flask configuration
+    FLASK_PORT = os.getenv("FLASK_PORT", "5000")
+
+    # Database configuration
+    DB_HOST = os.getenv("DB_HOST", "localhost")
+    DB_PORT = os.getenv("DB_PORT", 3306)
+    DB_NAME = os.getenv("DB_NAME", "chatbot")
+    DB_USER = os.getenv("DB_USER", "root")
+    DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+
+    # OpenAI API
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+    # LangChain settings
+    LANGCHAIN_TRACING_V2 = os.getenv("LANGCHAIN_TRACING_V2", "false")
+    LANGCHAIN_ENDPOINT = os.getenv("LANGCHAIN_ENDPOINT", "https://api.smith.langchain.com")
+    LANGCHAIN_API_KEY = os.getenv("LANGCHAIN_API_KEY")
+    LANGCHAIN_PROJECT = os.getenv("LANGCHAIN_PROJECT", "default_project")
+
+
+

@@ -9,7 +9,8 @@ form.addEventListener("submit", async (e) => {
 
     // Add user message to chat
     const userMessageDiv = document.createElement("div");
-    userMessageDiv.textContent = `You: ${userMessage}`;
+    userMessageDiv.classList.add("user");
+    userMessageDiv.textContent = `${userMessage}`;
     messagesDiv.appendChild(userMessageDiv);
 
     // Send to backend
@@ -22,7 +23,8 @@ form.addEventListener("submit", async (e) => {
 
     // Add bot response to chat
     const botMessageDiv = document.createElement("div");
-    botMessageDiv.textContent = `Bot: ${data.response}`;
+    botMessageDiv.classList.add("ai");
+    botMessageDiv.textContent = `${data.response}`;
     messagesDiv.appendChild(botMessageDiv);
 
     // Clear input

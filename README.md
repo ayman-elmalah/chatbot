@@ -49,8 +49,9 @@ pip install -r requirements.txt
 Make sure you have a `.env` file in the root of your project. You can use the `.env.example` file as a template. Here's an example:
 
 ```bash
-cp .env.example env
+cp .env.example .env
 ```
+
 
 Ensure you replace all keys` with your own values.
 

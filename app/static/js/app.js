@@ -2,32 +2,64 @@ const messagesDiv = document.getElementById("messages");
 const form = document.getElementById("chat-form");
 const userInput = document.getElementById("user-input");
 
+// Function to append a message to the chat
+function appendMessage(text, type) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(type === "user" ? "user" : "ai");
+    messageDiv.textContent = text;
+    messagesDiv.appendChild(messageDiv);
+}
+
+// Fetch existing messages on page load
+async function fetchMessages() {
+    try {
+        const response = await fetch("/api/messages");
+        if (!response.ok) throw new Error("Failed to fetch messages");
+        const messages = await response.json();
+
+        // Append each message to the chat
+        messages.forEach((message) => {
+            appendMessage(message.text, message.type);
+        });
+
+        // Scroll to the bottom of the chat
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+    }
+}
+
+// Submit handler for sending new messages
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const userMessage = userInput.value;
+    const userMessage = userInput.value.trim();
+    if (!userMessage) return;
 
     // Add user message to chat
-    const userMessageDiv = document.createElement("div");
-    userMessageDiv.classList.add("user");
-    userMessageDiv.textContent = `${userMessage}`;
-    messagesDiv.appendChild(userMessageDiv);
+    appendMessage(userMessage, "user");
 
     // Send to backend
-    const response = await fetch("/api/message", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch("/api/message", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: userMessage }),
+        });
 
-    // Add bot response to chat
-    const botMessageDiv = document.createElement("div");
-    botMessageDiv.classList.add("ai");
-    botMessageDiv.textContent = `${data.response}`;
-    messagesDiv.appendChild(botMessageDiv);
+        if (!response.ok) throw new Error("Failed to send message");
+        const data = await response.json();
 
-    // Clear input
+        // Add bot response to chat
+        appendMessage(data.response, "ai");
+    } catch (error) {
+        console.error("Error sending message:", error);
+    }
+
+    // Clear input and scroll to the bottom
     userInput.value = "";
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
+
+// Load existing messages on page load
+fetchMessages();

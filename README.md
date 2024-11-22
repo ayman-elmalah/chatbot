@@ -6,7 +6,7 @@ This project is a scalable chatbot built using Flask. It provides an interactive
 1. [Project Overview](#project-overview)
 2. [Technologies Used](#technologies-used)
 3. [Installation Guide](#installation-guide)
-4. [Database Migration](#database-migration)
+4. [Database Migration & Seeder](#database-migration-seeder)
 5. [Running the Application](#running-the-application)
 
 ## Project Overview
@@ -58,9 +58,9 @@ Ensure you replace all keys` with your own values.
 
 ---
 
-## Database Migration
+## Database Migration & Seeder
 
-To set up your database schema, you'll need to perform the migration. Follow these steps to migrate your database:
+To set up your database schema, you'll need to perform the migration and seeder. Follow these steps to migrate your database then seed settings:
 
 ```bash
 flask db migrate
@@ -68,6 +68,10 @@ flask db migrate
 
 ```bash
 flask db upgrade
+```
+
+```bash
+flask seed-settings
 ```
 
 ---

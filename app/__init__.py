@@ -28,4 +28,8 @@ def create_app():
         from .routes import ui_bp
         app.register_blueprint(ui_bp)
 
+    # Register commands after the app is created to avoid circular import
+    from app.commands.seed_settings_command import seed_settings_command
+    app.cli.add_command(seed_settings_command)
+
     return app

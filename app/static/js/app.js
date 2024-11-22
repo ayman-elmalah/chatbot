@@ -2,7 +2,27 @@ const messagesDiv = document.getElementById("messages");
 const form = document.getElementById("chat-form");
 const userInput = document.getElementById("user-input");
 
-// Function to append a message to the chat
+// Function to append a message with a typing effect for AI response
+function appendMessageWithTypingEffect(text, type) {
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add(type === "user" ? "user" : "ai");
+    messagesDiv.appendChild(messageDiv);
+
+    let index = 0;
+    function typeNextCharacter() {
+        if (index < text.length) {
+            messageDiv.textContent += text.charAt(index);
+            index++;
+            setTimeout(typeNextCharacter, 10); // Adjust typing speed (30ms per character)
+        } else {
+            // Scroll to the bottom once typing is complete
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    }
+    typeNextCharacter();
+}
+
+// Function to append a message without a typing effect (e.g., for user messages)
 function appendMessage(text, type) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add(type === "user" ? "user" : "ai");
@@ -18,9 +38,18 @@ async function fetchMessages() {
         const messages = await response.json();
 
         // Append each message to the chat
-        messages.forEach((message) => {
-            appendMessage(message.text, message.type);
-        });
+        if (messages.length === 1 && messages[0].type === "ai") {
+            // Apply typing effect if there's only one AI message
+            appendMessageWithTypingEffect(messages[0].text, "ai");
+        } else {
+            messages.forEach((message) => {
+                if (message.type === "ai") {
+                    appendMessage(message.text, "ai");
+                } else {
+                    appendMessage(message.text, "user");
+                }
+            });
+        }
 
         // Scroll to the bottom of the chat
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -53,14 +82,13 @@ form.addEventListener("submit", async (e) => {
         if (!response.ok) throw new Error("Failed to send message");
         const data = await response.json();
 
-        // Add bot response to chat
-        appendMessage(data.response, "ai");
+        // Add bot response with typing effect
+        appendMessageWithTypingEffect(data.response, "ai");
     } catch (error) {
         console.error("Error sending message:", error);
     }
 
-    // Clear input and scroll to the bottom
-    userInput.value = "";
+    // Scroll to the bottom
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 });
 

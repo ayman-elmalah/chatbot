@@ -1,9 +1,10 @@
+from datetime import datetime
 from flask import Blueprint, render_template, request, jsonify, make_response
 import uuid
 from app.models.user import User
 from app.models.message import Message
-from app import db
 from app.services.message_service import handle_message_service
+from app import db
 
 # Blueprint for UI routes
 ui_bp = Blueprint("ui", __name__)
@@ -35,6 +36,7 @@ def index():
     # If session ID exists, just render the page
     return render_template("index.html")
 
+
 @ui_bp.route("/api/messages", methods=["GET"])
 def get_messages():
     """Retrieve all messages for the current session."""
@@ -52,6 +54,22 @@ def get_messages():
     # Retrieve messages for the user
     messages = Message.query.filter_by(user_id=user.id).order_by(Message.id).all()
 
+    # Retrieve the welcome message from the settings table
+    from app.models.setting import Setting
+    welcome_message = Setting.get_value("ai_welcome_message")
+
+    # If no user messages exist, insert the welcome message into the database
+    if not messages and welcome_message:
+        new_welcome_message = Message(
+            user_id=user.id,
+            text=welcome_message,
+            type="ai",
+            timestamp=datetime.now(),
+        )
+        db.session.add(new_welcome_message)
+        db.session.commit()
+        messages = [new_welcome_message]  # Add the welcome message to the messages list
+
     # Convert messages to a serializable format
     serialized_messages = [
         {
@@ -63,6 +81,7 @@ def get_messages():
     ]
 
     return jsonify(serialized_messages), 200
+
 
 @ui_bp.route("/api/message", methods=["POST"])
 def message():

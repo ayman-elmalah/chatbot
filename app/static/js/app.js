@@ -36,6 +36,9 @@ form.addEventListener("submit", async (e) => {
     const userMessage = userInput.value.trim();
     if (!userMessage) return;
 
+    // Clear input immediately
+    userInput.value = "";
+
     // Add user message to chat
     appendMessage(userMessage, "user");
 

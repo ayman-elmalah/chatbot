@@ -3,6 +3,7 @@ from langchain_openai import ChatOpenAI
 from app.models.message import Message
 from app import db
 from langchain.memory import ConversationBufferMemory
+from app.models.setting import Setting
 
 # Initialize the AI model
 model = ChatOpenAI(model="gpt-3.5-turbo")
@@ -16,13 +17,19 @@ def initialize_memory(user_id):
     # Initialize ConversationBufferMemory
     memory = ConversationBufferMemory(memory_key="chat_history")
 
-    # Add system and user messages to memory (SystemMessage could be set depending on your app's logic)
+    # Retrieve the system message
+    system_message = Setting.get_value("ai_system_message")
+
+    # Prepend the system message to memory if it exists
+    if system_message:
+        memory.save_context({"input": ""}, {"output": system_message})
+
+    # Add user and AI messages to memory
     for message in messages:
         if message.type == 'user':
-            memory.save_context({"input": message.text},
-                                {"output": ""})  # Just save user input, AI response will be added after
+            memory.save_context({"input": message.text}, {"output": ""})
         elif message.type == 'ai':
-            memory.save_context({"input": ""}, {"output": message.text})  # Save AI response here
+            memory.save_context({"input": ""}, {"output": message.text})
 
     return memory
 

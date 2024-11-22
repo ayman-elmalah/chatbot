@@ -2,6 +2,8 @@
 
 This project is a scalable chatbot built using Flask. It provides an interactive interface for users to communicate with a chatbot. The chatbot is designed to be easily extendable, and integrated with AI capabilities for enhanced user experiences. This project serves as the front-end interface for interacting with a backend service, and it can be expanded to include AI-driven conversations powered by services like OpenAI or Langchain.
 
+![View the Record](./assets/screen-record.gif)
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Technologies Used](#technologies-used)
